@@ -1,5 +1,5 @@
 from django.db import models
-from customers.models import Customer
+from users.models import User
 from products.models import Product
 
 # Order Model
@@ -17,7 +17,7 @@ class Orders(models.Model):
                      ( ORDER_DELIVERD, "ORDER_DELIVERD"),
                      ( ORDER_REJECTED, "ORDER_REJECTED"))
     ORDER_STATUS = models.IntegerField(choices=STATUS_CHOICE, default=CART_STAGE)
-    owner=models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, related_name='orders')
+    owner=models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='orders')
     delete_status = models.IntegerField(choices=DELETE_CHOICES, default=LIVE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
