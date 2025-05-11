@@ -2,6 +2,49 @@
 
 <div class="account-page">
   <div class="container">
+   {% if messages %}
+  {% for message in messages %}
+    <div
+      id="django-message"
+      style="
+        position: fixed;
+        top: 90px;
+        right: 310px;
+        width: 300px;
+        background-color: {% if 'success' in message.tags %}rgb(76, 175, 80){% elif 'error' in message.tags %}rgb(231, 11, 11){% else %}gray{% endif %};
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        opacity: 1;
+        animation: slideIn 0.5s ease-out;
+        transition: opacity 0.5s ease-out;
+      "
+    >
+      <ul style="list-style-type: none; padding: 0; margin: 0">
+        <li style="margin-bottom: 10px">{{ message }}</li>
+      </ul>
+    </div>
+  {% endfor %}
+{% endif %}
+
+
+<!-- Inline Animation CSS -->
+<style>
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+</style>
+
+
     <div class="row">
       <div class="col-3">
         <img src="{% static 'images/image1.png' %}" width="100%" />
@@ -13,21 +56,76 @@
             <span onclick="register()">Register</span>
             <hr id="Indicator" />
           </div>
-          <form id="LoginForm">
-            <input type="text" placeholder="Username" />
-            <input type="password" placeholder="Password" />
-            <button type="submit" class="btn">Login</button>
+          <form id="LoginForm" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input
+              type="text"
+              name="username"
+              required
+              placeholder="Username"
+            />
+            <input
+              type="password"
+              name="password"
+              required
+              placeholder="Password"
+            />
+            <button type="submit" name="login" class="btn">Login</button>
             <a href="">Forget Password</a>
           </form>
 
-          <form id="RegForm">
-            <input type="text" placeholder="Username" />
-            <input type="email" placeholder="Email" />
-            <input type="password" placeholder="Password" />
-            <button type="submit" class="btn">Register</button>
+          <form
+            id="RegForm"
+            style="position: relative; top: 15px"
+            method="post"
+            enctype="multipart/form-data"
+          >
+            {% csrf_token %}
+            <input
+              type="text"
+              name="username"
+              required
+              maxlength="10"
+              minlength="3"
+              placeholder="Username"
+            />
+            <input type="email" name="email" required placeholder="Email" />
+            <input
+              type="password"
+              name="password"
+              required
+              minlength="8"
+              placeholder="Password"
+            />
+            <input
+              type="text"
+              name="address"
+              required
+              minlength="6"
+              placeholder="Address"
+            />
+            <input
+              type="text"
+              name="phone"
+              required
+              maxlength="10"
+              minlength="3"
+              placeholder="Phone Number"
+            />
+            <button type="submit" class="btn" name="register">Register</button>
           </form>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  setTimeout(() => {
+    const msg = document.getElementById("django-message");
+    if (msg) {
+      msg.style.opacity = "0";
+      setTimeout(() => msg.remove(), 500); // Wait for fade-out transition
+    }
+  }, 10000); // 10000 ms = 10 seconds
+</script>
